@@ -3,9 +3,12 @@ int sensorPin=0;
 
 double alpha=0.75;
 int period=20;
+int scale = 100;
 double change=0.0;
 double seconds=0;
-double beats=0;
+double bpm = 0;
+boolean pulse = false;
+
 
 void setup() {
   // put your setup code here, to run once:
@@ -15,29 +18,24 @@ void setup() {
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
   static double oldValue=0;
   static double oldChange=0;
+  
   int rawValue=analogRead(sensorPin);
   double newValue=alpha * oldValue+(1-alpha)*rawValue;
-  change=newValue-oldValue;
+  change=min(newValue-oldValue, 1) * scale;
+  
+  int low_threshold = 40;
+  int high_threshold = 90;
 
-  Serial.println(change);
-  
-  bool cond = (change<0.0 && oldChange>0.0);
-  digitalWrite(LED_BUILTIN, cond);
-  if(cond){
-    beats++;
+  if(change < 0){
+    change = 0;
+  } else {
+    Serial.println(change);
   }
   
-  if(seconds >= 1000){
-    float bpm = float(beats)/float(seconds) * 60;
-    //Serial.println(bpm);
-    seconds = 0;
-    beats = 0;
-  }
   oldValue=newValue;
   oldChange=change;
-  seconds += period;
+
   delay(period);
 }

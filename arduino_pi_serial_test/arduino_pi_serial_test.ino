@@ -1,16 +1,14 @@
 const int ledPin = 2;
 
 void setup() {
-  pinMode(LED_BUILTIN, OUTPUT);
+  //pinMode(LED_BUILTIN, OUTPUT);
   Serial.begin(9600);
 
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-  if(Serial.available()){
-    light(Serial.read() - '0');
-  }
+  Serial.write(150000);
 
   delay(500);
 }
